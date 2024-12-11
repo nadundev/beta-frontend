@@ -42,15 +42,15 @@ export default function SignInPage() {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Welcome back</CardTitle>
-        <CardDescription>Sign in to your account</CardDescription>
+    <Card className="w-full max-w-md mx-auto">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-2xl font-bold tracking-tight text-center">Welcome back</CardTitle>
+        <CardDescription className="text-center">Sign in to your account</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
-          <div>
-            <div>
+          <div className="grid gap-4">
+            <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
@@ -61,7 +61,7 @@ export default function SignInPage() {
                 required
               />
             </div>
-            <div>
+            <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
@@ -78,8 +78,16 @@ export default function SignInPage() {
           </div>
         </form>
       </CardContent>
-      <CardFooter>
-        <div>
+      <CardFooter className="flex flex-col">
+        <div className="relative my-4">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
           <Button variant="outline" onClick={handleGoogleAuth}>
             Google
           </Button>
