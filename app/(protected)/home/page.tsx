@@ -15,7 +15,7 @@ import { countries } from "countries-list";
 
 export default function Home() {
   const [formData, setFormData] = useState({
-    country: "",
+    country: "Sri Lanka",
     weight: "60",
     height: "150",
     age: "20",
@@ -75,10 +75,12 @@ Protein: Xg | Carbs: Xg | Fats: Xg
   };
 
   // Convert countries object to array for select
-  const countryOptions = Object.entries(countries).map(([code, country]) => ({
-    value: country.name,
-    label: country.name,
-  }));
+  const countryOptions = Object.entries(countries)
+    .map(([code, country]) => ({
+      value: country.name,
+      label: country.name,
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
 
   // Generate weight options from 20 to 180
   const weightOptions = Array.from({ length: 161 }, (_, i) => ({
@@ -91,6 +93,35 @@ Protein: Xg | Carbs: Xg | Fats: Xg
     value: String(i + 2),
     label: `${i + 2} meals`,
   }));
+
+  // Add this function to generate prompt text
+  const generatePromptText = (data: typeof formData) => {
+    return `Create me a diet plan using ${data.country} food. my weight is ${data.weight} and height is ${data.height} in cm. I am ${data.age} years old. create me diet plan to achive my goal of ${data.goal}. Number of meals I can take is ${data.meals}.
+
+Please format the response as follows:
+1. Daily Caloric Target: [calculate based on metrics and goal]
+2. Macronutrient Distribution:
+   - Protein: X%
+   - Carbs: X%
+   - Fats: X%
+
+3. Meal Plan:
+[For each meal 1-${data.meals}]:
+Meal #: [Name of meal]
+- [Food item 1] - [portion]
+- [Food item 2] - [portion]
+(etc.)
+Calories: X
+Protein: Xg | Carbs: Xg | Fats: Xg
+
+4. Additional Notes:
+- Hydration recommendation
+- Timing between meals
+- Any specific cultural considerations`;
+  };
+
+  // Show prompt immediately and update it when form changes
+  const currentPrompt = generatePromptText(formData);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -234,22 +265,19 @@ Protein: Xg | Carbs: Xg | Fats: Xg
             <Button onClick={handleGenerate} className="w-full">
               Generate Diet Plan
             </Button>
-
-            {(completion || prompt) && (
-              <div className="mt-6 space-y-4">
-                {prompt && (
-                  <div className="rounded-lg border bg-gray-50 p-4">
-                    <h3 className="mb-2 font-medium">Prompt:</h3>
-                    <pre className="whitespace-pre-wrap text-sm text-gray-600">{prompt}</pre>
-                  </div>
-                )}
-                {completion && (
-                  <div className="rounded-lg border bg-white p-4">
-                    <pre className="whitespace-pre-wrap">{completion}</pre>
-                  </div>
-                )}
+            <div className="mt-6 space-y-4">
+              <div className="rounded-lg border bg-gray-50 p-4">
+                <h3 className="mb-2 font-medium">Prompt:</h3>
+                <pre className="whitespace-pre-wrap text-sm text-gray-600">
+                  {currentPrompt}
+                </pre>
               </div>
-            )}
+              {completion && (
+                <div className="rounded-lg border bg-white p-4">
+                  <pre className="whitespace-pre-wrap">{completion}</pre>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </main>
