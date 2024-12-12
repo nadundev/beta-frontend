@@ -1,51 +1,62 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useSignUp } from '@clerk/nextjs'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { useState } from "react";
+import { useSignUp } from "@clerk/nextjs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function SignUpPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const { signUp, isLoaded: signUpLoaded } = useSignUp()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { signUp, isLoaded: signUpLoaded } = useSignUp();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!signUpLoaded) return
+    e.preventDefault();
+    if (!signUpLoaded) return;
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const result = await signUp.create({
         emailAddress: email,
         password,
-      })
-      
+      });
+
       if (result.status === "complete") {
         window.location.href = "/home";
       }
     } catch (error) {
-      console.error('Error signing up:', error)
+      console.error("Error signing up:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleGoogleAuth = () => {
     signUp?.authenticateWithRedirect({
       strategy: "oauth_google",
       redirectUrl: "/sso-callback",
-      redirectUrlComplete: "/home"
+      redirectUrlComplete: "/home",
     });
   };
 
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold tracking-tight text-center">Create an account</CardTitle>
-        <CardDescription className="text-center">Enter your email below to create your account</CardDescription>
+        <CardTitle className="text-2xl font-bold tracking-tight text-center">
+          Create an account
+        </CardTitle>
+        <CardDescription className="text-center">
+          Enter your email below to create your account
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
@@ -84,7 +95,9 @@ export default function SignUpPage() {
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+            <span className="bg-background px-2 text-muted-foreground">
+              Or continue with
+            </span>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
@@ -94,6 +107,5 @@ export default function SignUpPage() {
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }
-
