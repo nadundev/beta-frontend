@@ -19,6 +19,7 @@ export default function DietPlanner() {
 
   const [completion, setCompletion] = useState("");
   const [showPrompt, setShowPrompt] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const generatePromptText = (data: typeof formData) => {
     let promptText = `Create me a diet plan using ${data.country} food. my weight is ${data.weight} and height is ${data.height} in cm. I am ${data.age} years old. create me diet plan to achive my goal of ${data.goal}. Number of meals I can take is ${data.meals}.`;
@@ -55,6 +56,7 @@ Protein: Xg | Carbs: Xg | Fats: Xg
 
   const handleGenerate = async () => {
     try {
+      setIsGenerating(true);
       const response = await fetch("/api/diet-completion", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -73,6 +75,8 @@ Protein: Xg | Carbs: Xg | Fats: Xg
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -95,8 +99,12 @@ Protein: Xg | Carbs: Xg | Fats: Xg
                 <DietFilters formData={formData} setFormData={setFormData} />
               </div>
               <div className="flex bg-white px-4 py-4 border-t border-gray-200">
-                <Button onClick={handleGenerate} className="w-full">
-                  Generate Diet Plan
+                <Button 
+                  onClick={handleGenerate} 
+                  className="w-full"
+                  disabled={isGenerating}
+                >
+                  {isGenerating ? "Generating..." : "Generate Diet Plan"}
                 </Button>
               </div>
             </div>
