@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { SideBarHeader } from "./components/sideBarHeader";
+import { Sidebar } from "./components/Sidebar";
 
 export default async function ProtectedLayout({
   children,
@@ -14,11 +14,9 @@ export default async function ProtectedLayout({
   }
 
   return (
-    <>
-      <div className="h-screen overflow-hidden flex">
-        <SideBarHeader />
-        <div className="flex-1 overflow-y-auto">{children}</div>
-      </div>
-    </>
+    <div className="h-screen overflow-hidden flex">
+      <Sidebar />
+      <div className="flex-1 overflow-y-auto">{children}</div>
+    </div>
   );
-}
+} 

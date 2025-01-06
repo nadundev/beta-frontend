@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Image from "next/image";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -49,16 +50,25 @@ export default function SignInPage() {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full min-w-[400px] mx-auto">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold tracking-tight text-center">
+        <div className="flex justify-center pb-4">
+          <Image
+            src="/app-logo.svg"
+            alt="Logo"
+            width={100}
+            height={100}
+            className="w-auto h-5"
+          />
+        </div>
+        <CardTitle className="text-xl font-medium tracking-tight text-center text-gray-700">
           Welcome back
         </CardTitle>
-        <CardDescription className="text-center">
+        <CardDescription className="text-center text-gray-500">
           Sign in to your account
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-0">
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">
             <div className="grid gap-2">
@@ -66,7 +76,7 @@ export default function SignInPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="johndoe@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -77,6 +87,7 @@ export default function SignInPage() {
               <Input
                 id="password"
                 type="password"
+                placeholder="********"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -100,9 +111,19 @@ export default function SignInPage() {
             </span>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <Button variant="outline" onClick={handleGoogleAuth}>
-            Google
+        <div className="flex w-full">
+          <Button 
+            variant="outline" 
+            onClick={handleGoogleAuth}
+            className="flex items-center justify-center gap-2 w-full"
+          >
+            <Image
+              src="https://authjs.dev/img/providers/google.svg"
+              alt="Google logo"
+              width={20}
+              height={20}
+            />
+            Continue with Google
           </Button>
         </div>
       </CardFooter>
