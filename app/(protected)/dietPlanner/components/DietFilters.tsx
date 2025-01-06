@@ -21,8 +21,8 @@ interface DietFiltersProps {
 }
 
 export function DietFilters({ formData, setFormData }: DietFiltersProps) {
-  const countryOptions = Object.entries(countries)
-    .map(([code, country]) => ({
+  const countryOptions = Object.values(countries)
+    .map((country) => ({
       value: country.name,
       label: country.name,
     }))

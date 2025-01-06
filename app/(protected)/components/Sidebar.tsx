@@ -1,7 +1,7 @@
 "use client";
 
 import { UserButton } from "@clerk/nextjs";
-import { CookingPot, Home, Dumbbell } from "lucide-react";
+import { CookingPot, Home } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -74,7 +74,7 @@ export function Sidebar() {
                 <Link href="/home">
                   <span
                     className={`flex items-center justify-center p-2 rounded-full ${
-                      pathname === "/home" ? "bg-gray-100" : "bg-gray-50"
+                      pathname === "/home" ? "bg-gray-200" : "bg-gray-50"
                     } border border-gray-200`}
                   >
                     <Home className="h-4 w-4 text-gray-700" />
@@ -93,7 +93,7 @@ export function Sidebar() {
                     <span
                       className={`flex items-center justify-center p-2 rounded-full ${
                         pathname.includes("/dietPlanner")
-                          ? "bg-gray-100"
+                          ? "bg-gray-200"
                           : "bg-gray-50"
                       } border border-gray-200`}
                     >

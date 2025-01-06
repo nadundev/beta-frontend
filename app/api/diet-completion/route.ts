@@ -4,6 +4,12 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
 
+interface ApiError {
+  message: string;
+  status?: number;
+  code?: string;
+}
+
 export async function POST(req: Request) {
   try {
     const { prompt } = await req.json();
@@ -26,8 +32,9 @@ export async function POST(req: Request) {
     });
 
     return new Response(stream);
-  } catch (error: any) {
-    console.error("OpenAI API Error:", error);
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    console.error("OpenAI API Error:", apiError.message);
     return new Response(
       JSON.stringify({
         error: "Failed to generate diet plan. Please try again later.",
