@@ -37,7 +37,7 @@ export function PromptDisplay({ dietPlan, isGenerating }: PromptDisplayProps) {
           Ready to create your personalized diet plan?
         </h3>
         <p className="text-sm text-gray-500 max-w-md">
-          Fill in your details on the left and click 'Generate Diet Plan' to receive a customized nutrition plan tailored to your goals and preferences.
+          Fill in your details on the left and click &apos;Generate Diet Plan&apos; to receive a customized nutrition plan tailored to your goals and preferences.
         </p>
       </div>
     );

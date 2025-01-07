@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DietFilters } from "./components/DietFilters";
 import { PromptDisplay } from "./components/PromptDisplay";
-import { Output } from "./components/Output";
 import { DietPlan, DietFormData } from "@/types/diet";
 
 export default function DietPlanner() {
@@ -18,7 +17,6 @@ export default function DietPlanner() {
     allergies: "",
   });
 
-  const [completion, setCompletion] = useState("");
   const [showPrompt, setShowPrompt] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [dietPlan, setDietPlan] = useState<DietPlan | null>(null);
@@ -80,7 +78,6 @@ export default function DietPlanner() {
         if (done) break;
         const chunk = decoder.decode(value);
         result += chunk;
-        setCompletion(result);
       }
 
       // Parse the JSON response
