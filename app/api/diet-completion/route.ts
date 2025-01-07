@@ -4,19 +4,21 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
 
-interface ApiError {
-  message: string;
-  status?: number;
-  code?: string;
-}
-
 export async function POST(req: Request) {
   try {
     const { prompt } = await req.json();
 
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a diet planning assistant. Always respond with valid JSON data following the specified structure. Ensure all numeric values are numbers, not strings.",
+        },
+        { role: "user", content: prompt },
+      ],
+      response_format: { type: "json_object" },
       stream: true,
     });
 
@@ -32,9 +34,8 @@ export async function POST(req: Request) {
     });
 
     return new Response(stream);
-  } catch (error: unknown) {
-    const apiError = error as ApiError;
-    console.error("OpenAI API Error:", apiError.message);
+  } catch (error) {
+    console.error("OpenAI API Error:", error);
     return new Response(
       JSON.stringify({
         error: "Failed to generate diet plan. Please try again later.",

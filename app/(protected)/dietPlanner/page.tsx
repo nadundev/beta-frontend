@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { DietFilters } from "./components/DietFilters";
 import { PromptDisplay } from "./components/PromptDisplay";
 import { Output } from "./components/Output";
+import { DietPlan, DietFormData } from "@/types/diet";
 
 export default function DietPlanner() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<DietFormData>({
     country: "Sri Lanka",
     weight: "60",
     height: "150",
@@ -20,36 +21,43 @@ export default function DietPlanner() {
   const [completion, setCompletion] = useState("");
   const [showPrompt, setShowPrompt] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [dietPlan, setDietPlan] = useState<DietPlan | null>(null);
 
   const generatePromptText = (data: typeof formData) => {
-    let promptText = `Create me a diet plan using ${data.country} food. my weight is ${data.weight} and height is ${data.height} in cm. I am ${data.age} years old. create me diet plan to achive my goal of ${data.goal}. Number of meals I can take is ${data.meals}.`;
+    return `Create me a diet plan using ${data.country} food. my weight is ${data.weight} and height is ${data.height} in cm. I am ${data.age} years old. create me diet plan to achive my goal of ${data.goal}. Number of meals I can take is ${data.meals}.
+    ${data.allergies.trim() ? `\nPlease avoid these foods due to allergies: ${data.allergies}` : ''}
 
-    if (data.allergies.trim()) {
-      promptText += `\nPlease avoid these foods due to allergies: ${data.allergies}`;
-    }
-
-    promptText += `\n\nPlease format the response as follows:
-1. Daily Caloric Target: [calculate based on metrics and goal]
-2. Macronutrient Distribution:
-   - Protein: X%
-   - Carbs: X%
-   - Fats: X%
-
-3. Meal Plan:
-[For each meal 1-${data.meals}]:
-Meal #: [Name of meal]
-- [Food item 1] - [portion]
-- [Food item 2] - [portion]
-(etc.)
-Calories: X
-Protein: Xg | Carbs: Xg | Fats: Xg
-
-4. Additional Notes:
-- Hydration recommendation
-- Timing between meals
-- Any specific cultural considerations`;
-
-    return promptText;
+    Please provide the response in the following JSON format:
+    {
+      "dailyCalories": number,
+      "macronutrients": {
+        "protein": number (percentage),
+        "carbs": number (percentage),
+        "fats": number (percentage)
+      },
+      "meals": [
+        {
+          "name": string,
+          "items": [
+            {
+              "food": string,
+              "portion": string
+            }
+          ],
+          "nutrition": {
+            "calories": number,
+            "protein": number (grams),
+            "carbs": number (grams),
+            "fats": number (grams)
+          }
+        }
+      ],
+      "additionalNotes": {
+        "hydration": string,
+        "timing": string,
+        "culturalConsiderations": string
+      }
+    }`;
   };
 
   const currentPrompt = generatePromptText(formData);
@@ -70,8 +78,17 @@ Protein: Xg | Carbs: Xg | Fats: Xg
       while (reader) {
         const { done, value } = await reader.read();
         if (done) break;
-        result += decoder.decode(value);
+        const chunk = decoder.decode(value);
+        result += chunk;
         setCompletion(result);
+      }
+
+      // Parse the JSON response
+      try {
+        const parsedPlan = JSON.parse(result) as DietPlan;
+        setDietPlan(parsedPlan);
+      } catch (error) {
+        console.error("Failed to parse diet plan JSON:", error);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -109,13 +126,11 @@ Protein: Xg | Carbs: Xg | Fats: Xg
               </div>
             </div>
           ) : (
-            <PromptDisplay prompt={currentPrompt} />
+            <PromptDisplay dietPlan={null} isGenerating={false} />
           )}
         </div>
-        <div className="px-4 py-4 h-[calc(100vh-49px)]">
-          <div className="border border-gray-200 rounded-lg bg-white overflow-auto h-full">
-            <Output completion={completion} />
-          </div>
+        <div className="h-[calc(100vh-49px)] overflow-auto">
+            <PromptDisplay dietPlan={dietPlan} isGenerating={isGenerating} />
         </div>
       </main>
     </div>
