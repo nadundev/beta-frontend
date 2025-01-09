@@ -33,4 +33,5 @@ export interface DietFormData {
   goal: string;
   meals: string;
   allergies: string;
+  activityLevel: string;
 }

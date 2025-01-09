@@ -13,6 +13,7 @@ type FormData = {
   goal: string;
   meals: string;
   allergies: string;
+  activityLevel: string;
 };
 
 interface DietFiltersProps {
@@ -117,6 +118,26 @@ export function DietFilters({ formData, setFormData }: DietFiltersProps) {
           <SelectContent>
             <SelectItem value="weight loss">Weight Loss</SelectItem>
             <SelectItem value="weight gain">Weight Gain</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Activity Level Select */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Activity Level</label>
+        <Select
+          value={formData.activityLevel}
+          onValueChange={(value) => setFormData({ ...formData, activityLevel: value })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select activity level" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="sedentary">Sedentary (Little to no exercise)</SelectItem>
+            <SelectItem value="light">Light (Exercise 1-3 times/week)</SelectItem>
+            <SelectItem value="moderate">Moderate (Exercise 3-5 times/week)</SelectItem>
+            <SelectItem value="active">Active (Exercise 6-7 times/week)</SelectItem>
+            <SelectItem value="very_active">Very Active (Exercise multiple times/day)</SelectItem>
           </SelectContent>
         </Select>
       </div>

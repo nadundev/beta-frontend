@@ -17,6 +17,7 @@ export default function DietPlanner() {
     goal: "weight loss",
     meals: "3",
     allergies: "",
+    activityLevel: "moderate",
   });
 
   const [showPrompt, setShowPrompt] = useState(false);
@@ -25,8 +26,10 @@ export default function DietPlanner() {
   const [showDownloadDialog, setShowDownloadDialog] = useState(false);
 
   const generatePromptText = (data: typeof formData) => {
-    return `Create me a diet plan using ${data.country} food. my weight is ${data.weight} and height is ${data.height} in cm. I am ${data.age} years old. create me diet plan to achive my goal of ${data.goal}. Number of meals I can take is ${data.meals}.
+    return `Create me a diet plan using ${data.country} food. my weight is ${data.weight} and height is ${data.height} in cm. I am ${data.age} years old. My activity level is ${data.activityLevel} (${getActivityDescription(data.activityLevel)}). Create me diet plan to achieve my goal of ${data.goal}. Number of meals I can take is ${data.meals}.
     ${data.allergies.trim() ? `\nPlease avoid these foods due to allergies: ${data.allergies}` : ''}
+
+    Consider my activity level when calculating daily caloric needs. Adjust macronutrients based on both my goal and activity level.
 
     Please provide the response in the following JSON format:
     {
@@ -59,6 +62,17 @@ export default function DietPlanner() {
         "culturalConsiderations": string
       }
     }`;
+  };
+
+  const getActivityDescription = (level: string): string => {
+    const descriptions = {
+      sedentary: "Little to no exercise",
+      light: "Exercise 1-3 times/week",
+      moderate: "Exercise 3-5 times/week",
+      active: "Exercise 6-7 times/week",
+      very_active: "Exercise multiple times/day",
+    };
+    return descriptions[level as keyof typeof descriptions] || level;
   };
 
   const currentPrompt = generatePromptText(formData);
